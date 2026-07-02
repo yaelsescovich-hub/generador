@@ -1,0 +1,57 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pauta de Entrevista Proactiva · 4TMS</title>
+<style>:root{--navy:#22255A;--must:#D8A828;--green:#6FA52C;--ink:#1d2030;--mut:#6b7280;--line:#e4e7ee;--bg:#f4f5f9}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);font-size:13px;line-height:1.5}.wrap{max-width:860px;margin:18px auto;padding:0 14px 80px}.doc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:26px 30px}.head{display:flex;align-items:flex-start;border-bottom:3px solid var(--must);padding-bottom:12px;margin-bottom:16px}.head .t{font-size:20px;font-weight:bold;color:var(--navy)}.head .s{font-size:12px;color:var(--mut);margin-top:2px}.head .logo{margin-left:auto;text-align:right;font-size:11px;color:var(--mut)}.band{background:var(--navy);color:#fff;border-radius:6px;padding:7px 12px;font-weight:bold;font-size:12px;margin:20px 0 10px;text-transform:uppercase;letter-spacing:.4px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}.grid.three{grid-template-columns:1fr 1fr 1fr}.f label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);margin-bottom:3px}.f input,.f textarea,.f select{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff}.f textarea{resize:vertical;min-height:44px}.full{grid-column:1/-1}.q{margin:11px 0}.q .lbl{font-weight:bold;color:var(--navy);font-size:12.5px;margin-bottom:3px}.q .hint{font-size:10.5px;color:var(--mut);font-weight:normal}.q textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-family:inherit;min-height:54px;resize:vertical}.note{background:#f8fafc;border-left:4px solid var(--must);border-radius:6px;padding:12px 14px;font-size:12.5px;color:#334155;margin:8px 0}.tt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.tt>div{background:#f3f7ed;border:1px solid #dbe7c9;border-radius:6px;padding:9px 11px}.tt b{color:var(--navy)}.star{cursor:pointer;font-size:26px;color:#cbd5e1;letter-spacing:2px}.star.on{color:var(--must)}#__crmbar{position:fixed;top:8px;left:10px;z-index:2147483647;display:flex;gap:8px;align-items:center;font-family:Arial,sans-serif}#__crmbar button{background:var(--green);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}#__crmmsg{display:none;background:#fff;border:1px solid var(--green);color:#3d6b12;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:bold}@media print{#__crmbar{display:none!important}body{background:#fff}.doc{border:none}}</style></head>
+<body>
+<div id="__crmbar"><button onclick="__toCRM()">➕ Guardar en Entrevistas (CRM)</button><span id="__crmmsg"></span></div>
+<div class="wrap"><div class="doc">
+<div class="head"><div><div class="t">Pauta de Entrevista Proactiva</div><div class="s">Networking y construcción de cartera de talento · 4T Management Solutions</div></div><div class="logo"><b>4TMS</b><br>Fecha: <input type="date" id="en_fecha" style="border:1px solid #e4e7ee;border-radius:5px;padding:3px 6px;font-size:11px"></div></div>
+
+<div class="band">Datos del candidato</div>
+<div class="grid three">
+  <div class="f"><label>Nombre</label><input id="en_cand"></div>
+  <div class="f"><label>Cargo actual</label><input id="en_cargo"></div>
+  <div class="f"><label>Empresa actual</label><input id="en_empresa"></div>
+  <div class="f"><label>Ejecutivo 4TMS</label><input id="en_ej" value="Yael Sescovich"></div>
+  <div class="f"><label>Área / industria</label><input id="en_area"></div>
+  <div class="f"><label>Fuente / cómo llegamos</label><input id="en_fuente"></div>
+  <div class="f full"><label>LinkedIn (url)</label><input id="en_li"></div>
+</div>
+
+<div class="band">1 · Apertura</div>
+<div class="note"><b>Agradece el tiempo:</b> "Muchas gracias por darte el tiempo de conversar con nosotros. No es por un proceso puntual: queremos conocerte para tenerte presente cuando surja una oportunidad que calce con tu perfil."</div>
+
+<div class="band">2 · Propósito: conectar</div>
+<div class="note">El objetivo de esta conversación es <b>generar una conexión de largo plazo (networking)</b>, entender tu trayectoria y tus intereses, y mantener el vínculo para futuras búsquedas.</div>
+
+<div class="band">3 · Quiénes somos — las 4 T de 4TMS</div>
+<div class="tt"><div><b>T1 · Búsqueda de ejecutivos</b><br>Executive Search / Hunting para posiciones clave.</div><div><b>T2 · Mentoring &amp; Coaching</b><br>Acompañamiento ejecutivo y desarrollo de liderazgo.</div><div><b>T3 · Desarrollo organizacional</b><br>Estructura, roles, clima, desempeño y políticas de personas.</div><div><b>T4 · Benchmark &amp; Compensaciones</b><br>Estudios de mercado y bandas salariales.</div></div>
+
+<div class="band">4 · Su historia</div>
+<div class="q"><div class="lbl">Cuéntame tu trayectoria y experiencia. <span class="hint">Roles, logros, alcance (equipo, presupuesto, indicadores).</span></div><textarea id="en_tray"></textarea></div>
+<div class="q"><div class="lbl">¿Qué te motiva hoy? ¿Qué tipo de desafío o proyecto te interesa? <span class="hint">Motivación e intereses.</span></div><textarea id="en_mot"></textarea></div>
+<div class="grid three"><div class="f"><label>Nivel de idioma (inglés/otro)</label><input id="en_idi"></div><div class="f"><label>Expectativa de renta</label><input id="en_renta"></div><div class="f"><label>Disponibilidad</label><input id="en_disp" placeholder="Inmediata, 30 días…"></div></div>
+
+<div class="band">Evaluación del consultor</div>
+<div class="q"><div class="lbl">Fortalezas y posibles calces (proyectos vigentes o futuros)</div><textarea id="en_fort"></textarea></div>
+<div class="grid"><div class="f"><label>Evaluación general (0 a 5)</label><div id="en_stars"><span class="star" data-n="1">★</span><span class="star" data-n="2">★</span><span class="star" data-n="3">★</span><span class="star" data-n="4">★</span><span class="star" data-n="5">★</span> <span id="en_ratelbl" style="font-size:12px;color:#6b7280">0 / 5</span></div><input type="hidden" id="en_rate" value="0"></div><div class="f"><label>¿Presentar a algún proceso?</label><input id="en_present"></div></div>
+</div></div>
+<script>
+(function(){var d=document.getElementById('en_fecha');if(d&&!d.value){d.value=new Date().toISOString().slice(0,10);}
+ var stars=document.querySelectorAll('#en_stars .star');
+ function paint(n){stars.forEach(function(s){s.classList.toggle('on',(+s.getAttribute('data-n'))<=n);});document.getElementById('en_ratelbl').textContent=n+' / 5';}
+ stars.forEach(function(s){s.addEventListener('click',function(){var n=+s.getAttribute('data-n');var cur=+document.getElementById('en_rate').value;n=(n===cur?0:n);document.getElementById('en_rate').value=n;paint(n);});});
+})();
+function __gv(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';}
+function __crmMsg(t,ok){var m=document.getElementById('__crmmsg');if(m){m.textContent=t;m.style.display='inline-block';m.style.borderColor=ok?'#6FA52C':'#D8A828';m.style.color=ok?'#3d6b12':'#8a6608';}else{alert(t);}}
+function __toCRM(){
+ var inf=__gv('en_tray');
+ var fort=__gv('en_fort'); if(fort)inf+=(inf?'\n\n':'')+'Fortalezas y calce: '+fort;
+ var pres=__gv('en_present'); if(pres)inf+=(inf?'\n\n':'')+'Presentar a proceso: '+pres;
+ var o={_tipo:'entrevista_proactiva_4tms',candidato:__gv('en_cand'),cargo:__gv('en_cargo'),empresa:__gv('en_empresa'),area:__gv('en_area'),ejecutivo:__gv('en_ej'),fuente:__gv('en_fuente'),linkedin:__gv('en_li'),fecha:__gv('en_fecha')||new Date().toISOString().slice(0,10),motivacion:__gv('en_mot'),idioma:__gv('en_idi'),expectativaRenta:__gv('en_renta'),disponibilidad:__gv('en_disp'),informe:inf,rating:parseInt(__gv('en_rate')||'0',10)||0};
+ if(!o.candidato){__crmMsg('Falta el nombre del candidato',false);return;}
+ try{if(window.parent&&window.parent!==window&&typeof window.parent.addEntFromPauta==='function'){if(window.parent.addEntFromPauta(o)){__crmMsg('✓ Agregado a Entrevistas del CRM',true);return;}}}catch(e){}
+ try{if(window.opener&&typeof window.opener.addEntFromPauta==='function'){if(window.opener.addEntFromPauta(o)){__crmMsg('✓ Agregado a Entrevistas del CRM',true);return;}}}catch(e){}
+ var name='entrevista_proactiva_'+((o.candidato||'sin_nombre').replace(/[^a-zA-Z0-9_-]/g,'_'))+'_'+o.fecha+'.json';
+ try{var blob=new Blob([JSON.stringify(o,null,2)],{type:'application/json'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);__crmMsg('Descargado: súbelo en Entrevistas → Importar entrevista',true);}catch(e2){__crmMsg('No se pudo guardar: '+e2.message,false);}
+}
+</script>
+<div id="__xbar" style="position:fixed;top:8px;right:10px;z-index:2147483647;display:flex;gap:6px;font-family:Arial,sans-serif"><button onclick="__xWord()" style="background:#22255A;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ Word</button><button onclick="__xPDF()" style="background:#6FA52C;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ PDF</button></div><style>@media print{#__xbar{display:none!important}}</style><script>function __xName(){var t=(document.title||"documento");return (t.replace(/[^a-zA-Z0-9 _-]/g,"").replace(/\s+/g,"_").slice(0,60))||"documento";}function __xWord(){var clone=document.documentElement.cloneNode(true);var bar=clone.querySelector("#__xbar");if(bar&&bar.parentNode)bar.parentNode.removeChild(bar);var sc=clone.querySelectorAll("script");for(var i=0;i<sc.length;i++){if(sc[i].parentNode)sc[i].parentNode.removeChild(sc[i]);}var styles="";var sts=clone.querySelectorAll("style");for(var j=0;j<sts.length;j++){styles+=sts[j].outerHTML;}var bodyEl=clone.querySelector("body");var bodyHTML=bodyEl?bodyEl.innerHTML:clone.innerHTML;var head="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta charset=\"utf-8\">"+styles+"</head>";var html="\ufeff<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" xmlns=\"http://www.w3.org/TR/REC-html40\">"+head+"<body>"+bodyHTML+"</body></html>";var fn=__xName()+".doc";try{if(window.parent&&window.parent!==window&&window.parent.dl){window.parent.dl(fn,"application/msword;charset=utf-8",html);return;}}catch(e){}try{var blob=new Blob([html],{type:"application/msword;charset=utf-8"});var u=URL.createObjectURL(blob);var a=document.createElement("a");a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e2){alert("No se pudo descargar. Usa Abrir en pestaña nueva e imprime a PDF.");}}function __xPDF(){try{window.focus();}catch(e){}window.print();}</script></body></html>

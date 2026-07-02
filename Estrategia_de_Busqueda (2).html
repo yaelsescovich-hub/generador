@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generador de Estrategia de Búsqueda · 4TMS</title>
+<style>
+:root{--navy:#22255A;--gold:#D8A828;--sky:#8ed4ec;--ink:#15183a;--line:#cfd6e6;--green:#6FA52C;--red:#C0392B;}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#eef1f6}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:13px}
+.top{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 16px;flex-wrap:wrap}
+.top h1{font-size:15px;margin:0;font-weight:800}
+.top .sp{flex:1}
+.top button{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:7px;padding:7px 13px;font-size:13px;font-weight:600}
+.top button:hover{background:rgba(255,255,255,.22)}
+.top button.go{background:var(--gold);color:#222;border-color:var(--gold)}
+.wrap{display:grid;grid-template-columns:380px 1fr;height:calc(100vh - 49px)}
+.editor{overflow-y:auto;padding:14px;background:#f6f8fc;border-right:1px solid var(--line)}
+.preview{overflow-y:auto;padding:22px;background:#dfe4ee}
+.grp{background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.grp>h3{margin:0;padding:10px 12px;font-size:13px;background:var(--navy);color:#fff}
+.grp .bd{padding:11px 12px}
+.fld{margin-bottom:9px}
+.fld label{display:block;font-size:11px;font-weight:700;color:#56607a;margin-bottom:3px;text-transform:uppercase;letter-spacing:.3px}
+.fld input,.fld textarea{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff}
+.fld textarea{resize:vertical;min-height:70px;line-height:1.45}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tiny{font-size:11px;color:#7a8398;margin-top:3px;line-height:1.4}
+.addbtn{width:100%;border:1px dashed #9fb0d0;background:#fff;color:var(--navy);border-radius:7px;padding:8px;font-weight:700;font-size:12px}
+.addbtn:hover{background:#eef3fb}
+/* cronograma editor */
+.cron-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.cron-row input.lbl{flex:1;padding:5px 7px;border:1px solid var(--line);border-radius:5px;font-size:12px}
+.cron-row .wk{display:flex;gap:3px}
+.cron-row .wk label{width:20px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:4px;font-size:10px;cursor:pointer;background:#fff;user-select:none}
+.cron-row .wk input{display:none}
+.cron-row .wk input:checked + span{background:var(--gold);color:#222;font-weight:700}
+.cron-row .wk label span{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:3px}
+.cron-row .rm{color:var(--red);font-weight:700;cursor:pointer;padding:0 3px}
+.hint{font-size:11px;color:#7a8398;margin-top:8px;line-height:1.5}
+/* ---------- Slides ---------- */
+#deck{display:flex;flex-direction:column;gap:18px;align-items:center}
+.swrap{width:100%;max-width:1280px;box-shadow:0 6px 22px rgba(20,30,60,.18);border-radius:6px;overflow:hidden}
+.slide{width:1280px;height:720px;transform-origin:top left;position:relative;overflow:hidden;background:#fff}
+.brand{display:inline-flex;align-items:flex-start;line-height:.9;font-weight:800}
+.brand .f,.brand .ur{color:#fff}
+.brand.dark .f,.brand.dark .ur{color:var(--navy)}
+.brand.dark .t{color:var(--navy)}
+.brand .dots{display:grid;grid-template-columns:repeat(2,.17em);grid-template-rows:repeat(3,.17em);gap:.07em;margin:.06em .08em 0 .06em}
+.brand .dots i{width:.17em;height:.17em;border-radius:50%;background:#fff;display:block}
+.brand.dark .dots i{background:var(--navy)}
+.brand .dots i.g{background:var(--gold)!important}
+.brand .t{color:var(--gold);font-size:1.42em;line-height:.62;margin-left:.04em}
+.brandsub{letter-spacing:.34em;font-weight:700;white-space:nowrap}
+.brandsub .m{color:var(--sky)}.brandsub .s{color:#fff}
+.bs-dark .m{color:#3a4a8a}.bs-dark .s{color:var(--navy)}
+.s-cover{background:#1c2270;display:flex;align-items:center;justify-content:center}
+.s-cover .tag{position:absolute;bottom:42px;left:0;right:0;text-align:center;color:var(--sky);letter-spacing:.42em;font-size:21px;font-weight:600}
+.s-cover .tag b{color:var(--gold);font-weight:600}
+.puzzle{position:absolute;right:0;top:0;height:100%;width:34%;opacity:.5}
+.s-title{background:var(--gold)}
+.s-title .corner{position:absolute;top:34px;right:46px;text-align:right}
+.s-title .tt{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:#fff;padding:0 60px}
+.s-title .tt .n{font-size:64px;font-weight:800;margin:0}
+.s-title .tt .c{font-size:32px;font-weight:800;margin:16px 0 0;font-style:italic}
+/* content slide (white) */
+.s-doc{background:#fff;padding:46px 56px}
+.s-doc .corner{position:absolute;top:30px;right:46px;text-align:right}
+.eyebrow{color:var(--gold);font-weight:800;letter-spacing:.22em;font-size:18px;text-transform:uppercase}
+.dtitle{color:var(--navy);font-weight:800;font-size:38px;line-height:1.05;margin:4px 0 0}
+.rule{height:5px;width:120px;background:var(--gold);margin:16px 0 24px;border-radius:3px}
+.body{font-size:19px;line-height:1.6;color:#1f2547}
+.body p{margin:0 0 12px}
+.lead{font-size:20px;color:#15294a}
+ul.bul{list-style:none;margin:0;padding:0}
+ul.bul li{position:relative;padding-left:26px;margin-bottom:9px;font-size:18px;line-height:1.5}
+ul.bul li:before{content:"";position:absolute;left:4px;top:9px;width:9px;height:9px;background:var(--gold);border-radius:2px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.col-h{color:var(--navy);font-weight:800;font-size:22px;margin-bottom:14px;border-bottom:2px solid var(--sky);padding-bottom:6px}
+.skill-cols{columns:2;column-gap:30px}
+/* cronograma table */
+table.cron{width:100%;border-collapse:collapse;font-size:16px;margin-top:6px}
+table.cron th{background:var(--navy);color:#fff;font-weight:700;padding:11px 10px;border:1px solid #fff;text-align:center}
+table.cron th.act{text-align:left;width:42%}
+table.cron td{border:1px solid var(--line);padding:11px 12px;color:#1f2547}
+table.cron td.act{font-weight:600;background:#f3f6fc}
+table.cron td.on{background:var(--gold)}
+/* target chips */
+.chips{display:flex;flex-wrap:wrap;gap:14px}
+.chip{background:#f3f6fc;border:1.5px solid var(--navy);color:var(--navy);font-weight:700;font-size:20px;border-radius:10px;padding:16px 22px;min-width:170px;text-align:center}
+.chip.off{border-color:var(--red);color:var(--red);background:#fdf3f2}
+.note-box{background:#f3f6fc;border-left:5px solid var(--gold);padding:18px 22px;font-size:19px;line-height:1.6;color:#1f2547;margin-top:6px}
+@media print{
+ @page{size:13.333in 7.5in;margin:0}
+ html,body{background:#fff!important;margin:0}
+ .top,.editor,.preview>*:not(#deck){display:none!important}
+ .wrap{display:block;height:auto}
+ .preview{overflow:visible;padding:0;background:#fff}
+ #deck{gap:0}
+ .swrap{max-width:none;width:1280px;height:auto!important;box-shadow:none;border-radius:0;break-inside:avoid;page-break-after:always}
+ .swrap:last-child{page-break-after:auto}
+ .slide{transform:none!important}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Generador de Estrategia de Búsqueda · 4TMS</h1>
+  <span class="sp"></span>
+  <button onclick="exportJSON()">Exportar datos</button>
+  <button onclick="document.getElementById('imp').click()">Importar datos</button>
+  <input id="imp" type="file" accept="application/json" style="display:none" onchange="importJSON(this)">
+  <button class="go" onclick="window.print()">Imprimir / Guardar PDF</button>
+</div>
+<div class="wrap">
+  <div class="editor" id="editor"></div>
+  <div class="preview"><div id="deck"></div></div>
+</div>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const lines=s=>(s||'').split('\n').map(x=>x.trim()).filter(Boolean);
+const bullets=s=>{const l=lines(s);return l.length?`<ul class="bul">${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';};
+const paras=s=>(s||'').split('\n').map(x=>x.trim()).map(x=>x?`<p>${esc(x)}</p>`:'').join('');
+const KEY='fourtms_estrategia_gen_v1';
+
+let data=load()||{
+  cargo:'', cliente:'',
+  foco:'En la búsqueda para este cargo nos centraremos en el mercado chileno, particularmente en Santiago, donde buscaremos al candidato/a ideal.',
+  perfil:'Experiencia laboral: al menos 4 años en cargos similares.\nNacionalidad: chilena (no excluyente).\nFormación: estudios y experiencia afín.',
+  objetivo:'',
+  responsabilidades:'',
+  formacion:'Estudios y experiencia afín\nOffice avanzado\nExperiencia en gestión comercial\nExperiencia en atención al cliente',
+  habilidades:'Eficiencia\nOrganización\nResponsabilidad\nResolución y trabajo bajo presión\nGestión de ventas\nComunicación\nProactividad y autonomía\nCapacidad de planificación\nAdaptabilidad\nFlexibilidad\nTolerancia a la frustración\nCompromiso',
+  weeks:5,
+  cron:[
+    {lbl:'Presentación Estrategia de búsqueda',marks:[true,false,false,false,false]},
+    {lbl:'Presentación primer Status (long list)',marks:[false,true,true,false,false]},
+    {lbl:'Presentación segundo Status',marks:[false,false,true,true,false]},
+    {lbl:'Entrevistas equipo 4TMS + aplicación de pruebas',marks:[false,true,true,true,false]},
+    {lbl:'Entrevistas cliente',marks:[false,false,false,true,true]},
+    {lbl:'Contratación',marks:[false,false,false,false,true]},
+    {lbl:'Seguimiento cliente y candidato',marks:[false,false,false,false,true]}
+  ],
+  target:'', offlimits:''
+};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;}}
+function set(k,v){data[k]=v;save();renderDeck();}
+
+/* ============ EDITOR ============ */
+function renderEditor(){
+  $('#editor').innerHTML=`
+  <div class="grp"><h3>Datos generales</h3><div class="bd">
+    <div class="fld"><label>Cargo / posición</label><input value="${esc(data.cargo)}" oninput="set('cargo',this.value)" placeholder="Jefe de Servicio y Experiencia de Clientes"></div>
+    <div class="fld"><label>Cliente (opcional)</label><input value="${esc(data.cliente)}" oninput="set('cliente',this.value)"></div>
+  </div></div>
+
+  <div class="grp"><h3>Perfil de búsqueda</h3><div class="bd">
+    <div class="fld"><label>Foco / mercado</label><textarea oninput="set('foco',this.value)">${esc(data.foco)}</textarea></div>
+    <div class="fld"><label>Perfil profesional (una línea por viñeta)</label><textarea oninput="set('perfil',this.value)" style="min-height:110px">${esc(data.perfil)}</textarea></div>
+  </div></div>
+
+  <div class="grp"><h3>Descripción del cargo</h3><div class="bd">
+    <div class="fld"><label>Objetivo del cargo</label><textarea oninput="set('objetivo',this.value)" placeholder="Implementar proyectos que mejoren la satisfacción y experiencia de clientes...">${esc(data.objetivo)}</textarea></div>
+    <div class="fld"><label>Responsabilidades (una línea por viñeta)</label><textarea oninput="set('responsabilidades',this.value)" style="min-height:120px">${esc(data.responsabilidades)}</textarea></div>
+  </div></div>
+
+  <div class="grp"><h3>Formación y habilidades</h3><div class="bd">
+    <div class="fld"><label>Formación profesional (una por línea)</label><textarea oninput="set('formacion',this.value)">${esc(data.formacion)}</textarea></div>
+    <div class="fld"><label>Habilidades foco (una por línea)</label><textarea oninput="set('habilidades',this.value)" style="min-height:120px">${esc(data.habilidades)}</textarea></div>
+  </div></div>
+
+  <div class="grp"><h3>Cronograma</h3><div class="bd">
+    <div class="fld" style="max-width:140px"><label>N° de semanas</label><input type="number" min="1" max="10" value="${data.weeks}" oninput="setWeeks(this.value)"></div>
+    <div id="cronBox">${data.cron.map((r,i)=>cronRow(r,i)).join('')}</div>
+    <button class="addbtn" onclick="addCron()">+ Agregar actividad</button>
+    <div class="tiny">Marca las semanas en que ocurre cada actividad (se pintan en dorado).</div>
+  </div></div>
+
+  <div class="grp"><h3>Compañías target</h3><div class="bd">
+    <div class="fld"><label>Una compañía por línea</label><textarea oninput="set('target',this.value)" style="min-height:120px" placeholder="Falabella\nRipley\nCencosud\n...">${esc(data.target)}</textarea></div>
+  </div></div>
+
+  <div class="grp"><h3>Compañías off limits</h3><div class="bd">
+    <div class="fld"><label>Una por línea — empresas que no se pueden abordar</label><textarea oninput="set('offlimits',this.value)" placeholder="Empresa cliente\nEmpresas con acuerdo de no abordar...">${esc(data.offlimits)}</textarea></div>
+  </div></div>
+  <div class="hint">Se guarda solo en este navegador. <b>Exportar datos</b> para respaldar; <b>Imprimir / Guardar PDF</b> para el archivo final.</div>`;
+}
+function cronRow(r,i){
+  let wk='';for(let w=0;w<data.weeks;w++){wk+=`<label><input type="checkbox" ${r.marks[w]?'checked':''} onchange="toggleCron(${i},${w},this.checked)"><span>${w+1}</span></label>`;}
+  return `<div class="cron-row"><input class="lbl" value="${esc(r.lbl)}" oninput="setCron(${i},this.value)"><div class="wk">${wk}</div><span class="rm" onclick="delCron(${i})">✕</span></div>`;
+}
+function setWeeks(v){v=Math.max(1,Math.min(10,+v||1));data.weeks=v;data.cron.forEach(r=>{while(r.marks.length<v)r.marks.push(false);r.marks.length=v;});save();renderEditor();renderDeck();}
+function setCron(i,v){data.cron[i].lbl=v;save();renderDeck();}
+function toggleCron(i,w,on){data.cron[i].marks[w]=on;save();renderDeck();}
+function addCron(){data.cron.push({lbl:'',marks:Array(data.weeks).fill(false)});save();renderEditor();renderDeck();}
+function delCron(i){data.cron.splice(i,1);save();renderEditor();renderDeck();}
+
+/* ============ SLIDES ============ */
+const LOGO=(dark)=>`<span class="brand ${dark?'dark':''}"><span class="f">F</span><span class="dots"><i></i><i class="g"></i><i></i><i></i><i class="g"></i><i></i></span><span class="ur">UR</span><span class="t">T</span></span>`;
+const LOGO_SUB=(dark,size)=>`<div class="brandsub ${dark?'bs-dark':''}" style="font-size:${size}px"><span class="m">MANAGEMENT&nbsp;</span><span class="s">SOLUTIONS</span></div>`;
+const corner=()=>`<div class="corner"><div style="font-size:30px;display:inline-block">${LOGO(true)}</div>${LOGO_SUB(true,8)}</div>`;
+const PUZZLE=`<svg class="puzzle" viewBox="0 0 320 720" fill="none" stroke="#6f7fc0" stroke-width="2"><path d="M250 90h70v90h-22a16 16 0 100 32h22v86h-86v-22a16 16 0 10-32 0v22h-22v-86h22a16 16 0 100-32h-22V90z"/><path d="M205 360h86v86h22a16 16 0 110 32h-22v90h-86v-22a16 16 0 10-32 0v22h-2v-90h22a16 16 0 100-32h-22v-86h86z"/></svg>`;
+const slide=(cls,inner)=>`<div class="swrap"><div class="slide ${cls}">${inner}</div></div>`;
+const head=(eyebrow)=>`${corner()}<div class="eyebrow">${esc(eyebrow)}</div><div class="dtitle">${esc(data.cargo||'(cargo)')}</div><div class="rule"></div>`;
+
+function renderDeck(){
+  const d=data;const out=[];
+  out.push(slide('s-cover',`${PUZZLE}<div style="text-align:center"><div style="font-size:78px">${LOGO(false)}</div>${LOGO_SUB(false,14)}</div><div class="tag">TALENT - TRANSITION - TRANSFORMATION <b>&</b> TARGETING</div>`));
+  out.push(slide('s-title',`<div class="corner">${corner()}</div><div class="tt"><p class="n">Estrategia de búsqueda</p><p class="c">${esc([d.cargo,d.cliente].filter(Boolean).join(' / ')||'')}</p></div>`));
+  // perfil
+  out.push(slide('s-doc',`${head('Estrategia de búsqueda')}
+    <div class="body"><p class="lead">${esc(d.foco)}</p>${d.perfil.trim()?`<div style="margin-top:10px;font-weight:800;color:var(--navy);font-size:20px">Perfil profesional</div>${bullets(d.perfil)}`:''}</div>`));
+  // descripción del cargo
+  out.push(slide('s-doc',`${head('Descripción del cargo')}
+    <div class="body">${d.objetivo.trim()?`<p class="lead">${esc(d.objetivo)}</p>`:''}${d.responsabilidades.trim()?`<div style="margin-top:8px;font-weight:800;color:var(--navy);font-size:20px">Principales responsabilidades</div>${bullets(d.responsabilidades)}`:''}</div>`));
+  // formación + habilidades
+  out.push(slide('s-doc',`${head('Perfil requerido')}
+    <div class="two-col">
+      <div><div class="col-h">Formación profesional</div>${bullets(d.formacion)}</div>
+      <div><div class="col-h">Habilidades foco</div><div class="skill-cols">${bullets(d.habilidades)}</div></div>
+    </div>`));
+  // cronograma
+  out.push(slide('s-doc',`${head('Cronograma')}${cronTable()}`));
+  // target
+  out.push(slide('s-doc',`${head('Compañías target')}${chips(d.target,false)}`));
+  // off limits
+  out.push(slide('s-doc',`${head('Compañías off limits')}${d.offlimits.trim()?chips(d.offlimits,true):`<div class="note-box">Indicar qué compañías no pueden ser abordadas proactivamente para la atracción de talentos.</div>`}`));
+  // closing
+  out.push(slide('s-cover',`${PUZZLE}<div style="text-align:center"><div style="font-size:78px">${LOGO(false)}</div>${LOGO_SUB(false,14)}</div><div class="tag">TALENT - TRANSITION - TRANSFORMATION <b>&</b> TARGETING</div>`));
+  $('#deck').innerHTML=out.join('');
+  fit();
+}
+function cronTable(){
+  let th='<th class="act">Cronología</th>';for(let w=0;w<data.weeks;w++)th+=`<th>Semana ${w+1}</th>`;
+  const rows=data.cron.filter(r=>r.lbl.trim()).map(r=>{
+    let tds='';for(let w=0;w<data.weeks;w++)tds+=`<td class="${r.marks[w]?'on':''}"></td>`;
+    return `<tr><td class="act">${esc(r.lbl)}</td>${tds}</tr>`;
+  }).join('');
+  return `<table class="cron"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+function chips(txt,off){const l=lines(txt);return l.length?`<div class="chips">${l.map(x=>`<div class="chip ${off?'off':''}">${esc(x)}</div>`).join('')}</div>`:`<div class="note-box">Agrega las compañías en el panel de la izquierda.</div>`;}
+
+function fit(){
+  const printing=window.matchMedia('print').matches;
+  document.querySelectorAll('.swrap').forEach(w=>{
+    const s=w.querySelector('.slide');
+    if(printing){s.style.transform='none';w.style.height='';return;}
+    const scale=w.clientWidth/1280;s.style.transform=`scale(${scale})`;w.style.height=(720*scale)+'px';
+  });
+}
+window.addEventListener('resize',fit);
+function exportJSON(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Estrategia_${(data.cargo||'4TMS').replace(/[^\w]+/g,'_')}.json`;a.click();}
+function importJSON(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{data=Object.assign(data,JSON.parse(r.result));save();renderEditor();renderDeck();}catch(e){alert('Archivo no válido.');}};r.readAsText(f);inp.value='';}
+
+renderEditor();renderDeck();
+</script>
+<div id="__xbar" style="position:fixed;top:8px;right:10px;z-index:2147483647;display:flex;gap:6px;font-family:Arial,sans-serif"><button onclick="__xWord()" style="background:#22255A;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ Word</button><button onclick="__xPDF()" style="background:#6FA52C;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ PDF</button></div><style>@media print{#__xbar{display:none!important}}</style><script>function __xName(){var t=(document.title||"documento");return (t.replace(/[^a-zA-Z0-9 _-]/g,"").replace(/\s+/g,"_").slice(0,60))||"documento";}function __xWord(){var clone=document.documentElement.cloneNode(true);var bar=clone.querySelector("#__xbar");if(bar&&bar.parentNode)bar.parentNode.removeChild(bar);var sc=clone.querySelectorAll("script");for(var i=0;i<sc.length;i++){if(sc[i].parentNode)sc[i].parentNode.removeChild(sc[i]);}var styles="";var sts=clone.querySelectorAll("style");for(var j=0;j<sts.length;j++){styles+=sts[j].outerHTML;}var bodyEl=clone.querySelector("body");var bodyHTML=bodyEl?bodyEl.innerHTML:clone.innerHTML;var head="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta charset=\"utf-8\">"+styles+"</head>";var html="\ufeff<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" xmlns=\"http://www.w3.org/TR/REC-html40\">"+head+"<body>"+bodyHTML+"</body></html>";var fn=__xName()+".doc";try{if(window.parent&&window.parent!==window&&window.parent.dl){window.parent.dl(fn,"application/msword;charset=utf-8",html);return;}}catch(e){}try{var blob=new Blob([html],{type:"application/msword;charset=utf-8"});var u=URL.createObjectURL(blob);var a=document.createElement("a");a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e2){alert("No se pudo descargar. Usa Abrir en pestaña nueva e imprime a PDF.");}}function __xPDF(){try{window.focus();}catch(e){}window.print();}</script></body>
+</html>

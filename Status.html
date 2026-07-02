@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generador de Status · 4TMS</title>
+<style>
+:root{--navy:#22255A;--gold:#D8A828;--sky:#8ed4ec;--skyhead:#7ac6e2;--ink:#15183a;--line:#cfd6e6;--green:#6FA52C;--red:#C0392B;}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#eef1f6}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:13px}
+/* ---------- App chrome ---------- */
+.top{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 16px;flex-wrap:wrap}
+.top h1{font-size:15px;margin:0;font-weight:800;letter-spacing:.3px}
+.top .sp{flex:1}
+.top button{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:7px;padding:7px 13px;font-size:13px;font-weight:600}
+.top button:hover{background:rgba(255,255,255,.22)}
+.top button.go{background:var(--gold);color:#222;border-color:var(--gold)}
+.wrap{display:grid;grid-template-columns:380px 1fr;gap:0;height:calc(100vh - 49px)}
+.editor{overflow-y:auto;padding:14px;background:#f6f8fc;border-right:1px solid var(--line)}
+.preview{overflow-y:auto;padding:22px;background:#dfe4ee}
+/* ---------- Editor ---------- */
+.grp{background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.grp>h3{margin:0;padding:10px 12px;font-size:13px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between}
+.grp>h3 .cnt{background:var(--gold);color:#222;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:700}
+.grp .bd{padding:11px 12px}
+.fld{margin-bottom:9px}
+.fld label{display:block;font-size:11px;font-weight:700;color:#56607a;margin-bottom:3px;text-transform:uppercase;letter-spacing:.3px}
+.fld input,.fld textarea,.fld select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff}
+.fld textarea{resize:vertical;min-height:54px;line-height:1.4}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cand{border:1px solid var(--line);border-radius:9px;margin-bottom:10px;background:#fbfcfe}
+.cand .ch{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2f8;border-bottom:1px solid var(--line);border-radius:9px 9px 0 0;cursor:pointer}
+.cand .ch b{flex:1;font-size:13px}
+.cand .ch .x{color:var(--red);font-weight:700;font-size:16px;padding:0 4px}
+.cand .cb{padding:10px;display:none}
+.cand.open .cb{display:block}
+.cand .ch .chev{transition:.2s;font-size:11px;color:#888}
+.cand.open .ch .chev{transform:rotate(90deg)}
+.sub{border:1px dashed #c2cce0;border-radius:7px;padding:8px;margin-bottom:7px;position:relative;background:#fff}
+.sub .rm{position:absolute;top:5px;right:6px;color:var(--red);font-weight:700;cursor:pointer;font-size:13px}
+.addbtn{width:100%;border:1px dashed #9fb0d0;background:#fff;color:var(--navy);border-radius:7px;padding:8px;font-weight:700;font-size:12px}
+.addbtn:hover{background:#eef3fb}
+.addmini{border:1px dashed #b9c4dc;background:#fff;color:#445;border-radius:6px;padding:5px;font-weight:600;font-size:11px;width:100%}
+.photo-prev{width:54px;height:54px;border-radius:6px;object-fit:cover;border:1px solid var(--line);background:#eee}
+.hint{font-size:11px;color:#7a8398;margin-top:8px;line-height:1.5}
+.hint a{color:var(--navy)}
+/* ---------- Slides ---------- */
+#deck{display:flex;flex-direction:column;gap:18px;align-items:center}
+.swrap{width:100%;max-width:1280px;box-shadow:0 6px 22px rgba(20,30,60,.18);border-radius:6px;overflow:hidden}
+.slide{width:1280px;height:720px;transform-origin:top left;position:relative;overflow:hidden;background:#fff;font-family:Arial,Helvetica,sans-serif}
+/* brand logo */
+.brand{display:inline-flex;align-items:flex-start;line-height:.9;font-weight:800}
+.brand .f,.brand .ur{color:#fff}
+.brand.dark .f,.brand.dark .ur{color:var(--navy)}
+.brand .dots{display:grid;grid-template-columns:repeat(2,.17em);grid-template-rows:repeat(3,.17em);gap:.07em;margin:.06em .08em 0 .06em}
+.brand .dots i{width:.17em;height:.17em;border-radius:50%;background:#fff;display:block}
+.brand.dark .dots i{background:var(--navy)}
+.brand .dots i.g{background:var(--gold)!important}
+.brand .t{color:var(--gold);font-size:1.42em;line-height:.62;margin-left:.04em}
+.brand.dark .t{color:var(--navy)}
+.brandsub{letter-spacing:.34em;font-weight:700;white-space:nowrap}
+.brandsub .m{color:var(--sky)}.brandsub .s{color:#fff}
+.brand.dark ~ .brandsub .m,.bs-dark .m{color:#3a4a8a}.bs-dark .s{color:var(--navy)}
+/* cover / closing */
+.s-cover{background:#1c2270;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.s-cover .logobox{text-align:center}
+.s-cover .tag{position:absolute;bottom:42px;left:0;right:0;text-align:center;color:var(--sky);letter-spacing:.42em;font-size:21px;font-weight:600}
+.s-cover .tag b{color:var(--gold);font-weight:600}
+.puzzle{position:absolute;right:0;top:0;height:100%;width:34%;opacity:.5}
+/* title slide */
+.s-title{background:var(--gold);position:relative}
+.s-title .corner{position:absolute;top:34px;right:46px}
+.s-title .tt{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:#fff}
+.s-title .tt .n{font-size:74px;font-weight:800;margin:0}
+.s-title .tt .c{font-size:30px;font-weight:800;margin:14px 0 0}
+.s-title .tt .d{font-size:30px;font-weight:800;margin:2px 0 0}
+/* content (sky) base */
+.s-sky{background:var(--sky);padding:42px 52px}
+.s-sky .corner{position:absolute;top:30px;right:46px}
+.s-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:26px}
+.t1tag{background:transparent;color:#fff;font-weight:800;font-size:34px;line-height:1;margin-top:6px}
+.s-head .ttl{color:var(--navy);font-weight:800;font-size:46px;line-height:1.04}
+/* simple table */
+table.cand-tbl{width:100%;border-collapse:collapse;font-size:21px;background:rgba(255,255,255,.16)}
+table.cand-tbl th{background:var(--skyhead);color:var(--navy);font-weight:800;text-align:left;padding:14px 16px;border:1px solid #67b8d6}
+table.cand-tbl td{padding:16px;border:1px solid #67b8d6;color:#15294a;vertical-align:middle}
+/* detail card */
+.dt-grid{display:grid;grid-template-columns:30% 36% 34%;border:2px solid var(--navy);background:#fff}
+.dt-head{background:var(--navy);color:#fff;font-weight:800;font-size:20px;padding:13px 16px}
+.dt-head:not(:last-child),.dt-cell:not(:last-child){border-right:1px solid #c9d2e6}
+.dt-body{display:contents}
+.dt-cell{padding:15px;font-size:15px;line-height:1.45;color:#1c2340}
+.dt-cell.c1{text-align:left}
+.dt-cell .ph{width:150px;height:150px;object-fit:cover;border:1px solid var(--line);display:block;margin-bottom:14px;background:#e7ebf2}
+.dt-cell .nm{font-weight:800;font-size:17px;margin-bottom:10px}
+.dt-cell .edu b{font-weight:800}
+.dt-cell .exp .e{margin-bottom:9px}
+.dt-cell .exp .e b{font-weight:800}
+.dt-cell ul{margin:14px 0 0;padding-left:18px}
+.dt-cell ul li{margin-bottom:4px}
+.dt-cell .ing{margin-top:14px}
+.empty-note{color:#15294a;opacity:.6;font-size:20px;padding:30px 4px}
+/* print */
+@media print{
+ @page{size:13.333in 7.5in;margin:0}
+ html,body{background:#fff!important;margin:0}
+ .top,.editor,.preview>*:not(#deck){display:none!important}
+ .wrap{display:block;height:auto}
+ .preview{overflow:visible;padding:0;background:#fff}
+ #deck{gap:0}
+ .swrap{max-width:none;width:1280px;height:auto!important;box-shadow:none;border-radius:0;break-inside:avoid;page-break-after:always}
+ .swrap:last-child{page-break-after:auto}
+ .slide{transform:none!important}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Generador de Status · 4TMS</h1>
+  <span class="sp"></span>
+  <button onclick="exportJSON()">Exportar datos</button>
+  <button onclick="document.getElementById('imp').click()">Importar datos</button>
+  <input id="imp" type="file" accept="application/json" style="display:none" onchange="importJSON(this)">
+  <button class="go" onclick="window.print()">Imprimir / Guardar PDF</button>
+</div>
+<div class="wrap">
+  <div class="editor" id="editor"></div>
+  <div class="preview"><div id="deck"></div></div>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const nl2br=s=>esc(s).replace(/\n/g,'<br>');
+const uid=()=>'c'+Math.random().toString(36).slice(2,8);
+const KEY='fourtms_status_gen_v1';
+
+let data=load()||{
+  numero:'2',
+  cargo:'',
+  cliente:'',
+  fecha:new Date().toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'}),
+  resumen:'',
+  pre:[], con:[], desc:[]
+};
+
+function blankPre(){return{id:uid(),nombre:'',cargo:'',compania:'',statusCorto:'Candidato/a preseleccionado/a',foto:'',edu:[{inst:'',titulo:''}],exp:[{empresa:'',fechas:'',cargo:''}],sueldo:'',disp:'',movil:'',perfil:'',ingles:'avanzado',_open:true};}
+function blankRow(){return{id:uid(),nombre:'',cargo:'',compania:'',status:'Contactando'};}
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;}}
+
+/* ============ EDITOR ============ */
+function renderEditor(){
+  const e=$('#editor');
+  e.innerHTML=`
+  <div class="grp"><h3>Datos del status</h3><div class="bd">
+    <div class="row2">
+      <div class="fld"><label>N° de status</label><input value="${esc(data.numero)}" oninput="set('numero',this.value)"></div>
+      <div class="fld"><label>Fecha</label><input value="${esc(data.fecha)}" oninput="set('fecha',this.value)"></div>
+    </div>
+    <div class="fld"><label>Cargo / posición</label><input value="${esc(data.cargo)}" oninput="set('cargo',this.value)" placeholder="Ej: Brand Manager Make Up"></div>
+    <div class="fld"><label>Cliente</label><input value="${esc(data.cliente)}" oninput="set('cliente',this.value)" placeholder="Ej: PUIG"></div>
+    <div class="fld"><label>Resumen (opcional — si lo dejas vacío, no se incluye esa lámina)</label><textarea oninput="set('resumen',this.value)" placeholder="Breve resumen del avance del proceso...">${esc(data.resumen)}</textarea></div>
+  </div></div>
+
+  <div class="grp"><h3>Candidatos preseleccionados <span class="cnt">${data.pre.length}</span></h3><div class="bd" id="preBox">
+    ${data.pre.map((c,i)=>preCard(c,i)).join('')}
+    <button class="addbtn" onclick="addPre()">+ Agregar candidato preseleccionado</button>
+  </div></div>
+
+  <div class="grp"><h3>Candidatos contactados <span class="cnt">${data.con.length}</span></h3><div class="bd">
+    ${data.con.map((c,i)=>rowCard('con',c,i)).join('')}
+    <button class="addbtn" onclick="addRow('con')">+ Agregar contactado</button>
+  </div></div>
+
+  <div class="grp"><h3>Candidatos descartados <span class="cnt">${data.desc.length}</span></h3><div class="bd">
+    ${data.desc.map((c,i)=>rowCard('desc',c,i)).join('')}
+    <button class="addbtn" onclick="addRow('desc')">+ Agregar descartado</button>
+  </div></div>
+  <div class="hint">Los datos se guardan solos en este navegador. Usa <b>Exportar datos</b> para respaldar o pasarlo a otro equipo, e <b>Imprimir / Guardar PDF</b> para generar el archivo final.</div>`;
+}
+
+function preCard(c,i){
+  return `<div class="cand ${c._open?'open':''}" data-i="${i}">
+    <div class="ch" onclick="togglePre(${i},event)"><span class="chev">▶</span><b>${esc(c.nombre||'(sin nombre)')}</b><span class="x" onclick="delPre(${i},event)">✕</span></div>
+    <div class="cb">
+      <div class="row2">
+        <div class="fld"><label>Nombre</label><input value="${esc(c.nombre)}" oninput="setPre(${i},'nombre',this.value)"></div>
+        <div class="fld"><label>Cargo actual</label><input value="${esc(c.cargo)}" oninput="setPre(${i},'cargo',this.value)"></div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Compañía actual</label><input value="${esc(c.compania)}" oninput="setPre(${i},'compania',this.value)"></div>
+        <div class="fld"><label>Status (tabla)</label><input value="${esc(c.statusCorto)}" oninput="setPre(${i},'statusCorto',this.value)"></div>
+      </div>
+      <div class="fld"><label>Foto</label>
+        <div style="display:flex;align-items:center;gap:10px">
+          <img class="photo-prev" src="${c.foto||''}" onerror="this.style.visibility='hidden'">
+          <div><input type="file" accept="image/*" onchange="setPhoto(${i},this)" style="font-size:11px">
+          ${c.foto?`<div class="hint"><a href="#" onclick="setPre(${i},'foto','');renderEditor();renderDeck();return false">quitar foto</a></div>`:''}</div>
+        </div>
+      </div>
+      <div class="fld"><label>Formación (institución + título)</label>
+        <div id="edu-${i}">${c.edu.map((ed,j)=>eduRow(i,j,ed)).join('')}</div>
+        <button class="addmini" onclick="addEdu(${i})">+ formación</button>
+      </div>
+      <div class="fld"><label>Experiencia (empresa, fechas, cargo)</label>
+        <div id="exp-${i}">${c.exp.map((ex,j)=>expRow(i,j,ex)).join('')}</div>
+        <button class="addmini" onclick="addExp(${i})">+ experiencia</button>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Expectativa de sueldo</label><input value="${esc(c.sueldo)}" oninput="setPre(${i},'sueldo',this.value)" placeholder="$2.800.000 líquidos"></div>
+        <div class="fld"><label>Disponibilidad</label><input value="${esc(c.disp)}" oninput="setPre(${i},'disp',this.value)" placeholder="2-3 semanas"></div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Movilización (opcional)</label><input value="${esc(c.movil)}" oninput="setPre(${i},'movil',this.value)" placeholder="Movilización propia"></div>
+        <div class="fld"><label>Inglés</label><input value="${esc(c.ingles)}" oninput="setPre(${i},'ingles',this.value)"></div>
+      </div>
+      <div class="fld"><label>Perfil / evaluación (narrativa del status)</label><textarea oninput="setPre(${i},'perfil',this.value)" style="min-height:90px">${esc(c.perfil)}</textarea></div>
+    </div>
+  </div>`;
+}
+function eduRow(i,j,ed){return `<div class="sub"><span class="rm" onclick="delEdu(${i},${j})">✕</span>
+  <div class="fld" style="margin:0 18px 6px 0"><label>Institución</label><input value="${esc(ed.inst)}" oninput="setEdu(${i},${j},'inst',this.value)"></div>
+  <div class="fld" style="margin:0"><label>Título</label><input value="${esc(ed.titulo)}" oninput="setEdu(${i},${j},'titulo',this.value)"></div></div>`;}
+function expRow(i,j,ex){return `<div class="sub"><span class="rm" onclick="delExp(${i},${j})">✕</span>
+  <div class="row2" style="margin-right:16px"><div class="fld" style="margin:0"><label>Empresa</label><input value="${esc(ex.empresa)}" oninput="setExp(${i},${j},'empresa',this.value)"></div>
+  <div class="fld" style="margin:0"><label>Fechas</label><input value="${esc(ex.fechas)}" oninput="setExp(${i},${j},'fechas',this.value)" placeholder="Jun 2022 – actualidad"></div></div>
+  <div class="fld" style="margin:6px 16px 0 0"><label>Cargo</label><input value="${esc(ex.cargo)}" oninput="setExp(${i},${j},'cargo',this.value)"></div></div>`;}
+
+function rowCard(list,c,i){
+  return `<div class="sub"><span class="rm" onclick="delRow('${list}',${i})">✕</span>
+   <div class="row2" style="margin-right:16px"><div class="fld" style="margin:0"><label>Nombre</label><input value="${esc(c.nombre)}" oninput="setRow('${list}',${i},'nombre',this.value)"></div>
+   <div class="fld" style="margin:0"><label>Cargo</label><input value="${esc(c.cargo)}" oninput="setRow('${list}',${i},'cargo',this.value)"></div></div>
+   <div class="row2" style="margin:6px 16px 0 0"><div class="fld" style="margin:0"><label>Compañía</label><input value="${esc(c.compania)}" oninput="setRow('${list}',${i},'compania',this.value)"></div>
+   <div class="fld" style="margin:0"><label>Status</label><input value="${esc(c.status)}" oninput="setRow('${list}',${i},'status',this.value)"></div></div></div>`;
+}
+
+/* ---- editor actions ---- */
+function set(k,v){data[k]=v;save();renderDeck();}
+function setPre(i,k,v){data.pre[i][k]=v;save();renderDeck();if(k==='nombre')$(`.cand[data-i="${i}"] .ch b`).textContent=v||'(sin nombre)';}
+function setRow(list,i,k,v){data[list][i][k]=v;save();renderDeck();}
+function setEdu(i,j,k,v){data.pre[i].edu[j][k]=v;save();renderDeck();}
+function setExp(i,j,k,v){data.pre[i].exp[j][k]=v;save();renderDeck();}
+function togglePre(i,ev){if(ev.target.classList.contains('x'))return;data.pre[i]._open=!data.pre[i]._open;$(`.cand[data-i="${i}"]`).classList.toggle('open');}
+function addPre(){data.pre.push(blankPre());save();renderEditor();renderDeck();}
+function delPre(i,ev){ev.stopPropagation();if(!confirm('¿Eliminar este candidato?'))return;data.pre.splice(i,1);save();renderEditor();renderDeck();}
+function addEdu(i){data.pre[i].edu.push({inst:'',titulo:''});save();renderEditor();renderDeck();}
+function delEdu(i,j){data.pre[i].edu.splice(j,1);save();renderEditor();renderDeck();}
+function addExp(i){data.pre[i].exp.push({empresa:'',fechas:'',cargo:''});save();renderEditor();renderDeck();}
+function delExp(i,j){data.pre[i].exp.splice(j,1);save();renderEditor();renderDeck();}
+function addRow(list){data[list].push(blankRow());save();renderEditor();renderDeck();}
+function delRow(list,i){data[list].splice(i,1);save();renderEditor();renderDeck();}
+function setPhoto(i,inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{data.pre[i].foto=r.result;save();renderEditor();renderDeck();};r.readAsDataURL(f);}
+
+/* ============ SLIDES ============ */
+const LOGO=(dark)=>`<span class="brand ${dark?'dark':''}"><span class="f">F</span><span class="dots"><i></i><i class="g"></i><i></i><i></i><i class="g"></i><i></i></span><span class="ur">UR</span><span class="t">T</span></span>`;
+const LOGO_SUB=(dark,size)=>`<div class="brandsub ${dark?'bs-dark':''}" style="font-size:${size}px"><span class="m">MANAGEMENT&nbsp;</span><span class="s">SOLUTIONS</span></div>`;
+const cornerLogo=()=>`<div class="corner" style="text-align:right"><div style="font-size:30px;display:inline-block">${LOGO(true)}</div>${LOGO_SUB(true,8)}</div>`;
+const PUZZLE=`<svg class="puzzle" viewBox="0 0 320 720" fill="none" stroke="#6f7fc0" stroke-width="2"><path d="M250 90h70v90h-22a16 16 0 100 32h22v86h-86v-22a16 16 0 10-32 0v22h-22v-86h22a16 16 0 100-32h-22V90z"/><path d="M205 360h86v86h22a16 16 0 110 32h-22v90h-86v-22a16 16 0 10-32 0v22h-2v-90h22a16 16 0 100-32h-22v-86h86z"/></svg>`;
+
+function slide(cls,inner,extra=''){return `<div class="swrap"><div class="slide ${cls}" ${extra}>${inner}</div></div>`;}
+
+function renderDeck(){
+  const d=data;const out=[];
+  // cover
+  out.push(slide('s-cover',`${PUZZLE}<div class="logobox"><div style="font-size:78px">${LOGO(false)}</div>${LOGO_SUB(false,14)}</div><div class="tag">TALENT - TRANSITION - TRANSFORMATION <b>&</b> TARGETING</div>`));
+  // title
+  out.push(slide('s-title',`<div class="corner">${cornerLogo()}</div><div class="tt"><p class="n">Status n°${esc(d.numero||'')}</p><p class="c">${esc([d.cargo,d.cliente].filter(Boolean).join(' / '))}</p><p class="d">${esc(d.fecha||'')}</p></div>`));
+  // resumen (optional)
+  if((d.resumen||'').trim()){
+    out.push(slide('s-sky',`${cornerLogo()}<div class="s-head"><div class="t1tag">T1</div><div class="ttl">Resumen</div></div><div style="font-size:23px;color:#15294a;line-height:1.6;max-width:1000px">${nl2br(d.resumen)}</div>`));
+  }
+  // preseleccionados table
+  out.push(tableSlides('Candidatos Preseleccionados',d.pre.map(c=>[c.nombre,c.cargo,c.compania,c.statusCorto]),['Nombre','Cargo','Compañía','Status']));
+  // detail cards
+  d.pre.forEach(c=>out.push(detailSlide(c)));
+  // contactados
+  out.push(tableSlides('Candidatos Contactados',d.con.map(c=>[c.nombre,c.cargo,c.compania,c.status]),['Nombre','Cargo','Compañía','Status']));
+  // descartados
+  out.push(tableSlides('Candidatos Descartados',d.desc.map(c=>[c.nombre,c.cargo,c.compania,c.status]),['Nombre','Cargo','Compañía','Status']));
+  // closing
+  out.push(slide('s-cover',`${PUZZLE}<div class="logobox"><div style="font-size:78px">${LOGO(false)}</div>${LOGO_SUB(false,14)}</div><div class="tag">TALENT - TRANSITION - TRANSFORMATION <b>&</b> TARGETING</div>`));
+  $('#deck').innerHTML=out.join('');
+  fit();
+}
+
+function tableSlideOne(title,rows,heads,cont){
+  const body=rows.length?rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c||'')}</td>`).join('')}</tr>`).join('')
+    :`<tr><td colspan="${heads.length}" style="text-align:center;opacity:.55">— sin candidatos en esta categoría —</td></tr>`;
+  const titleHTML=`Candidatos<br>${esc(title.replace('Candidatos ',''))}${cont?' <span style="font-size:.5em;font-weight:600">(cont.)</span>':''}`;
+  return slide('s-sky',`${cornerLogo()}
+    <div class="s-head"><div class="t1tag">T1</div><div class="ttl">${titleHTML}</div></div>
+    <table class="cand-tbl"><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table>`);
+}
+function tableSlides(title,rows,heads){
+  const PER=7;
+  if(rows.length<=PER)return tableSlideOne(title,rows,heads,false);
+  let out='';for(let k=0;k<rows.length;k+=PER)out+=tableSlideOne(title,rows.slice(k,k+PER),heads,k>0);
+  return out;
+}
+
+function detailSlide(c){
+  const edu=c.edu.filter(e=>e.inst||e.titulo).map(e=>`<div class="edu" style="margin-bottom:8px"><b>${esc(e.inst)}</b>${e.titulo?'<br>'+esc(e.titulo):''}</div>`).join('');
+  const exp=c.exp.filter(e=>e.empresa||e.cargo||e.fechas).map(e=>`<div class="e"><b>${esc(e.empresa)}</b>${e.fechas?'<br>'+esc(e.fechas):''}${e.cargo?'<br>Cargo: '+esc(e.cargo):''}</div>`).join('');
+  const bullets=[c.sueldo&&`Expectativa de sueldo: ${esc(c.sueldo)}`,c.disp&&`Disponibilidad: ${esc(c.disp)}`,c.movil&&esc(c.movil)].filter(Boolean);
+  return slide('s-sky',`${cornerLogo()}
+    <div class="s-head"><div class="t1tag">T1</div><div class="ttl">Candidatos<br>Preseleccionados</div></div>
+    <div class="dt-grid">
+      <div class="dt-head">Nombre</div><div class="dt-head">Cargo</div><div class="dt-head">Status</div>
+      <div class="dt-cell c1">${c.foto?`<img class="ph" src="${c.foto}">`:''}<div class="nm">${esc(c.nombre)}</div>${edu}</div>
+      <div class="dt-cell"><div class="exp">${exp}</div>${bullets.length?`<ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}</div>
+      <div class="dt-cell">${nl2br(c.perfil)}${c.ingles?`<div class="ing">Inglés: ${esc(c.ingles)}</div>`:''}</div>
+    </div>`);
+}
+
+/* ---- scale slides to fit preview width on screen (1:1 for print) ---- */
+function fit(){
+  const printing=window.matchMedia('print').matches;
+  document.querySelectorAll('.swrap').forEach(w=>{
+    const s=w.querySelector('.slide');
+    if(printing){s.style.transform='none';w.style.height='';return;}
+    const scale=w.clientWidth/1280;
+    s.style.transform=`scale(${scale})`;
+    w.style.height=(720*scale)+'px';
+  });
+}
+window.addEventListener('resize',fit);
+
+/* ---- export / import ---- */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`Status_${(data.numero||'')}_${(data.cargo||'4TMS').replace(/[^\w]+/g,'_')}.json`;a.click();
+}
+function importJSON(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);o.pre=(o.pre||[]).map(c=>Object.assign(blankPre(),c));o.con=(o.con||[]).map(c=>Object.assign(blankRow(),c));o.desc=(o.desc||[]).map(c=>Object.assign(blankRow(),c));data=o;save();renderEditor();renderDeck();}catch(e){alert('Archivo no válido.');}};r.readAsText(f);inp.value='';}
+
+renderEditor();renderDeck();
+</script>
+<div id="__xbar" style="position:fixed;top:8px;right:10px;z-index:2147483647;display:flex;gap:6px;font-family:Arial,sans-serif"><button onclick="__xWord()" style="background:#22255A;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ Word</button><button onclick="__xPDF()" style="background:#6FA52C;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ PDF</button></div><style>@media print{#__xbar{display:none!important}}</style><script>function __xName(){var t=(document.title||"documento");return (t.replace(/[^a-zA-Z0-9 _-]/g,"").replace(/\s+/g,"_").slice(0,60))||"documento";}function __xWord(){var clone=document.documentElement.cloneNode(true);var bar=clone.querySelector("#__xbar");if(bar&&bar.parentNode)bar.parentNode.removeChild(bar);var sc=clone.querySelectorAll("script");for(var i=0;i<sc.length;i++){if(sc[i].parentNode)sc[i].parentNode.removeChild(sc[i]);}var styles="";var sts=clone.querySelectorAll("style");for(var j=0;j<sts.length;j++){styles+=sts[j].outerHTML;}var bodyEl=clone.querySelector("body");var bodyHTML=bodyEl?bodyEl.innerHTML:clone.innerHTML;var head="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta charset=\"utf-8\">"+styles+"</head>";var html="\ufeff<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" xmlns=\"http://www.w3.org/TR/REC-html40\">"+head+"<body>"+bodyHTML+"</body></html>";var fn=__xName()+".doc";try{if(window.parent&&window.parent!==window&&window.parent.dl){window.parent.dl(fn,"application/msword;charset=utf-8",html);return;}}catch(e){}try{var blob=new Blob([html],{type:"application/msword;charset=utf-8"});var u=URL.createObjectURL(blob);var a=document.createElement("a");a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e2){alert("No se pudo descargar. Usa Abrir en pestaña nueva e imprime a PDF.");}}function __xPDF(){try{window.focus();}catch(e){}window.print();}</script></body>
+</html>

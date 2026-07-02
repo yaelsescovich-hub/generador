@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pauta de Levantamiento de Perfil · 4TMS</title>
+<style>
+:root{--navy:#22255A;--must:#D8A828;--green:#6FA52C;--ink:#1d2030;--mut:#6b7280;--line:#e4e7ee;--bg:#f4f5f9}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);font-size:13px;line-height:1.45}
+.bar{background:var(--navy);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+.bar b{font-size:15px}.bar .sub{font-size:11px;color:#b9bce0}
+.bar .right{margin-left:auto;display:flex;gap:8px}
+.btn{background:var(--must);color:var(--navy);border:none;border-radius:7px;padding:8px 14px;font-weight:bold;font-size:13px;cursor:pointer}
+.btn.ghost{background:#eef0f6;color:var(--navy)}
+.wrap{max-width:880px;margin:18px auto;padding:0 14px 60px}
+.doc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:26px 30px}
+.head{display:flex;align-items:flex-start;border-bottom:3px solid var(--must);padding-bottom:12px;margin-bottom:18px}
+.head .t{font-size:20px;font-weight:bold;color:var(--navy)}
+.head .s{font-size:12px;color:var(--mut);margin-top:2px}
+.head .logo{margin-left:auto;text-align:right;font-size:11px;color:var(--mut)}
+.band{background:var(--navy);color:#fff;border-radius:6px;padding:7px 12px;font-weight:bold;font-size:12px;margin:20px 0 10px;text-transform:uppercase;letter-spacing:.4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+.grid.three{grid-template-columns:1fr 1fr 1fr}
+.f label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);margin-bottom:3px}
+.f input,.f textarea,.f select{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff}
+.f textarea{resize:vertical;min-height:46px}
+.full{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;margin-top:4px}
+th{background:#f0f2f8;color:var(--navy);text-align:left;font-size:11px;text-transform:uppercase;padding:8px;border:1px solid var(--line)}
+td{border:1px solid var(--line);padding:6px;vertical-align:top}
+td input,td textarea{width:100%;border:none;outline:none;font-size:12.5px;font-family:inherit;resize:vertical}
+.musthave{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:10px;font-weight:bold;padding:2px 8px;border-radius:5px}
+.tag.m{background:#fbeecb;color:#8a6608}.tag.d{background:#e6f2d6;color:#3d6b12}
+.mini{font-size:11px;color:var(--mut);margin-top:4px}
+.addbtn{background:#eef0f6;border:1px dashed #b9bce0;color:var(--navy);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;margin-top:6px}
+@media print{.bar,.addbtn,.no-print{display:none!important}body{background:#fff;font-size:11.5px}.wrap{margin:0;max-width:100%}.doc{border:none;border-radius:0;padding:0}.band{-webkit-print-color-adjust:exact;print-color-adjust:exact}th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head>
+<body>
+<div class="bar">
+  <b>4T Management Solutions</b><span class="sub">Pauta de Levantamiento de Perfil · Executive Search (T1)</span>
+  <div class="right">
+    <button class="btn ghost" onclick="addComp()">+ Competencia</button>
+    <button class="btn ghost" onclick="addResp()">+ Responsabilidad</button>
+    <button class="btn" onclick="window.print()">Imprimir / PDF</button>
+  </div>
+</div>
+<div class="wrap"><div class="doc">
+  <div class="head">
+    <div><div class="t">Pauta de Levantamiento de Perfil</div><div class="s">Reunión de levantamiento con el cliente · base para la búsqueda</div></div>
+    <div class="logo"><b>4TMS</b><br>Fecha: <span contenteditable="true">__/__/____</span></div>
+  </div>
+
+  <div class="band">1 · Identificación del cargo</div>
+  <div class="grid three">
+    <div class="f"><label>Cliente / Empresa</label><input placeholder="Razón social"></div>
+    <div class="f"><label>Cargo</label><input placeholder="Ej: Gerente de Operaciones"></div>
+    <div class="f"><label>Área / Gerencia</label><input></div>
+    <div class="f"><label>Reporta a</label><input placeholder="Cargo del jefe directo"></div>
+    <div class="f"><label>Personas a cargo</label><input placeholder="N° y tipo de equipo"></div>
+    <div class="f"><label>Ubicación / Modalidad</label><input placeholder="Ciudad · presencial/híbrido/remoto"></div>
+    <div class="f"><label>Renta referencial</label><input placeholder="Líquida o bruta · banda"></div>
+    <div class="f"><label>Renta variable / bono</label><input placeholder="% o monto anual"></div>
+    <div class="f"><label>Fecha objetivo de cierre</label><input placeholder="dd/mm/aaaa"></div>
+  </div>
+
+  <div class="band">2 · Contexto y objetivo del cargo</div>
+  <div class="grid">
+    <div class="f"><label>Motivo de la vacante</label><input placeholder="Cargo nuevo / reemplazo / crecimiento"></div>
+    <div class="f"><label>¿Cargo confidencial?</label><input placeholder="Sí / No · a quién se comunica"></div>
+    <div class="f full"><label>Objetivo del cargo (para qué existe la posición)</label><textarea></textarea></div>
+    <div class="f full"><label>Principales desafíos a 6–12 meses</label><textarea></textarea></div>
+  </div>
+
+  <div class="band">3 · Responsabilidades clave</div>
+  <table><thead><tr><th style="width:30px">#</th><th>Responsabilidad / función principal</th></tr></thead>
+  <tbody id="resp">
+    <tr><td>1</td><td><input></td></tr>
+    <tr><td>2</td><td><input></td></tr>
+    <tr><td>3</td><td><input></td></tr>
+    <tr><td>4</td><td><input></td></tr>
+  </tbody></table>
+  <button class="addbtn" onclick="addResp()">+ Agregar responsabilidad</button>
+
+  <div class="band">4 · Perfil requerido (must-have vs. deseable)</div>
+  <div class="musthave"><span class="tag m">M = Imprescindible</span><span class="tag d">D = Deseable</span></div>
+  <table style="margin-top:8px"><thead><tr><th>Requisito</th><th style="width:90px">Detalle</th><th style="width:60px">M / D</th></tr></thead>
+  <tbody>
+    <tr><td>Formación / título</td><td><input></td><td><input placeholder="M/D"></td></tr>
+    <tr><td>Años de experiencia</td><td><input></td><td><input placeholder="M/D"></td></tr>
+    <tr><td>Industrias / sectores deseados</td><td><input></td><td><input placeholder="M/D"></td></tr>
+    <tr><td>Conocimientos técnicos / sistemas</td><td><input></td><td><input placeholder="M/D"></td></tr>
+    <tr><td>Idiomas</td><td><input></td><td><input placeholder="M/D"></td></tr>
+    <tr><td>Otro (certificaciones, viajes, etc.)</td><td><input></td><td><input placeholder="M/D"></td></tr>
+  </tbody></table>
+
+  <div class="band">5 · Competencias y preguntas conductuales</div>
+  <div class="mini no-print">Preguntas tipo STAR (Situación · Tarea · Acción · Resultado). Edita o agrega según el cargo.</div>
+  <table style="margin-top:6px"><thead><tr><th style="width:170px">Competencia</th><th>Pregunta sugerida</th></tr></thead>
+  <tbody id="comp">
+    <tr><td><input value="Liderazgo de equipos"></td><td><textarea>Cuéntame de un equipo que hayas liderado en un momento difícil. ¿Qué hiciste y cuál fue el resultado?</textarea></td></tr>
+    <tr><td><input value="Pensamiento estratégico"></td><td><textarea>Describe una decisión de mediano/largo plazo que tomaste. ¿Cómo la fundamentaste y qué impacto tuvo?</textarea></td></tr>
+    <tr><td><input value="Orientación a resultados"></td><td><textarea>Dame un ejemplo de una meta exigente que lograste. ¿Cómo la mediste y qué obstáculos sorteaste?</textarea></td></tr>
+    <tr><td><input value="Influencia / relacionamiento"></td><td><textarea>Háblame de una vez que tuviste que convencer a alguien sin autoridad directa sobre esa persona.</textarea></td></tr>
+    <tr><td><input value="Adaptación al cambio"></td><td><textarea>Cuéntame de un cambio importante (reestructura, fusión, crisis). ¿Cómo lo manejaste tú y tu equipo?</textarea></td></tr>
+  </tbody></table>
+  <button class="addbtn" onclick="addComp()">+ Agregar competencia</button>
+
+  <div class="band">6 · Condiciones y proceso de selección</div>
+  <div class="grid">
+    <div class="f"><label>Etapas del proceso acordadas</label><input placeholder="Ej: 4TMS → cliente → assessment → oferta"></div>
+    <div class="f"><label>N° de entrevistas con el cliente</label><input></div>
+    <div class="f"><label>Evaluaciones (psicolaboral, técnica, otras)</label><input></div>
+    <div class="f"><label>Contraparte / decisor final</label><input></div>
+    <div class="f full"><label>Beneficios y atractivos de la posición (para el pitch al candidato)</label><textarea></textarea></div>
+  </div>
+
+  <div class="band">7 · Notas del levantamiento</div>
+  <div class="f full"><textarea style="min-height:90px"></textarea></div>
+
+  <div class="mini" style="margin-top:18px;border-top:1px solid var(--line);padding-top:10px">Documento de trabajo interno 4T Management Solutions · Executive Search. Confidencial.</div>
+</div></div>
+
+<script>
+function addResp(){const tb=document.getElementById('resp');const n=tb.rows.length+1;const tr=tb.insertRow();tr.innerHTML='<td>'+n+'</td><td><input></td>';}
+function addComp(){const tb=document.getElementById('comp');const tr=tb.insertRow();tr.innerHTML='<td><input></td><td><textarea></textarea></td>';}
+</script>
+<div id="__xbar" style="position:fixed;top:8px;right:10px;z-index:2147483647;display:flex;gap:6px;font-family:Arial,sans-serif"><button onclick="__xWord()" style="background:#22255A;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ Word</button><button onclick="__xPDF()" style="background:#6FA52C;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:bold;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)">⬇ PDF</button></div><style>@media print{#__xbar{display:none!important}}</style><script>function __xName(){var t=(document.title||"documento");return (t.replace(/[^a-zA-Z0-9 _-]/g,"").replace(/\s+/g,"_").slice(0,60))||"documento";}function __xWord(){var clone=document.documentElement.cloneNode(true);var bar=clone.querySelector("#__xbar");if(bar&&bar.parentNode)bar.parentNode.removeChild(bar);var sc=clone.querySelectorAll("script");for(var i=0;i<sc.length;i++){if(sc[i].parentNode)sc[i].parentNode.removeChild(sc[i]);}var styles="";var sts=clone.querySelectorAll("style");for(var j=0;j<sts.length;j++){styles+=sts[j].outerHTML;}var bodyEl=clone.querySelector("body");var bodyHTML=bodyEl?bodyEl.innerHTML:clone.innerHTML;var head="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta charset=\"utf-8\">"+styles+"</head>";var html="\ufeff<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" xmlns=\"http://www.w3.org/TR/REC-html40\">"+head+"<body>"+bodyHTML+"</body></html>";var fn=__xName()+".doc";try{if(window.parent&&window.parent!==window&&window.parent.dl){window.parent.dl(fn,"application/msword;charset=utf-8",html);return;}}catch(e){}try{var blob=new Blob([html],{type:"application/msword;charset=utf-8"});var u=URL.createObjectURL(blob);var a=document.createElement("a");a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e2){alert("No se pudo descargar. Usa Abrir en pestaña nueva e imprime a PDF.");}}function __xPDF(){try{window.focus();}catch(e){}window.print();}</script></body>
+</html>
